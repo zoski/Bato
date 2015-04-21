@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<title>My first Three.js app</title>
+		<style>
+			body { margin: 0; } 
+			canvas { width: 100%; height: 100%;}
+		</style>
+	</head>
+
+	<body>
+		<script src="lib/three.min.js"></script> 
+
+		<script>
+
+		    var scene, camera, renderer;
+		    var geometry, material, material2, mesh, cube;
+			var material3, cube3;
+			var spotlight;
+			
+		    init();
+			move();
+		    animate();
+
+		    function init() {
+				scene = new THREE.Scene();
+
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.z = 1000;
+				
+				renderer = new THREE.WebGLRenderer();
+
+				geometry = new THREE.BoxGeometry( 200, 200, 200 );
+
+				//	Cube file de fer
+				material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+				mesh = new THREE.Mesh(geometry, material);
+				scene.add( mesh );
+
+				// Cube vert
+				material2 = new THREE.MeshBasicMaterial( {color: 0x00ff00 });
+				cube = new THREE.Mesh(geometry, material2);
+				scene.add( cube );
+
+				// 	Cube texturé
+				material3 = new THREE.MeshLambertMaterial({color: 0x7777ff});
+				cube3 = new THREE.Mesh(geometry, material3);
+				cube3.castShadow = true;
+				cube3.receiveShadow = true;
+
+				scene.add( cube3 );
+
+				//	Eclairage
+				var lumiere = new THREE.Mesh(new THREE.SphereGeometry(10, 20, 20), new THREE.MeshBasicMaterial({color: 0xff0000}));
+				lumiere.position.x = 400;	lumiere.position.y = 600;	lumiere.position.z = -100;
+				scene.add( lumiere );
+
+				spotLight = new THREE.SpotLight( 0xffffff );
+				spotLight.position.set( 400, 600, -100 );
+				spotLight.castShadow = true;
+				scene.add( spotLight );
+
+				//	Rendu
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+				renderer.shadowMapEnabled = true;
+
+
+				document.body.appendChild( renderer.domElement );
+		    }
+
+		    function animate() {
+				requestAnimationFrame( animate );
+
+				mesh.rotation.x += 0.01;
+				mesh.rotation.y += 0.02;
+
+				cube.rotation.y += 0.02;
+
+				renderer.render( scene, camera );
+		    }
+
+			function move() {
+				cube.position.x += 400;
+				cube3.position.x -= 400;
+			}
+
+		</script>
+	</body>
+</html>
