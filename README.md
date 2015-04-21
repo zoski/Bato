@@ -4,7 +4,7 @@ Projet de 2eme année Informatique et Réseau.
 ## TODO
  - [ ] Roadmap
  - [ ] Première scene
-	- [ ] Camera
+	- [x] Camera
 	- [ ] Fonds
 	- [ ] Mer
 	- [ ] Bateau
