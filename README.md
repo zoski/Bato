@@ -1,9 +1,19 @@
 # bateau
-Projet de 2eme année Informatique et Réseau
+Projet de 2eme année Informatique et Réseau.
 
 ## TODO
- [ ] Workflow
- [ ] Models
+ - [ ] Roadmap
+ - [ ] Première scene
+	- [ ] Camera
+	- [ ] Fonds
+	- [ ] Mer
+	- [ ] Bateau
+ - [ ] Github Page
+ - [ ] Models
+	- [ ] Bateau
+	- [ ] Vague
+	- [ ] Vent
+	- [ ] ...
  ...
 
 ## Organisation du projet
