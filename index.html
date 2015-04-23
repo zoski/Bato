@@ -27,48 +27,47 @@
     <script src="js/stats.js"></script>
     <script>
     var scene, camera, renderer;
-    var geometry, material, material2, mesh, cube;
-    var material3, cube3;
-    var spotlight;
     var sunSphere, sunLight, starField, sunAngle, skydom, dayDuration, delta;
     var onRenderFcts = [];
 
 
     init();
-    render();
-
+    
     function init() {
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.5, 3000);
-        camera.position.z = 1000;
-
-        renderer = new THREE.WebGLRenderer();
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 3000);
+        camera.position.z = 3;
+        camera.position.y = 3;
 
         ////////////////////////	Rendu
+        renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setSize(window.innerWidth, window.innerHeight);
         // renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
         // renderer.shadowMapEnabled = true;
         document.body.appendChild(renderer.domElement);
 
-
-
         ////////////////////////	Controle caméra
         controls = new THREE.OrbitControls(camera);
 
-        //	Cube file de fer
-        material = new THREE.MeshBasicMaterial({
+        ////////////////////////	Plane
+        var material = new THREE.MeshPhongMaterial({
+        	shading	: THREE.SmoothShading,
             color: 0xff0000,
-            wireframe: true
+            side: THREE.DoubleSide
         });
-        mesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 1000, 1000), material);
-        scene.add(mesh);
+
+        var geometry = new THREE.PlaneGeometry( 5, 5 );
+        var material = new THREE.MeshPhongMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+		var plane = new THREE.Mesh( geometry, material );
+		plane.rotateX(Math.PI/2)
+		scene.add( plane );
 
 
         ////////////////////////	DayNight
 		sunAngle = -3/6*Math.PI*2;
 		onRenderFcts.push(function(delta, now){
-			dayDuration	= 10	// nb seconds for a full day cycle
+			dayDuration	= 60	// nb seconds for a full day cycle
 			sunAngle	+= delta/dayDuration * Math.PI*2
 		})
 
@@ -84,7 +83,6 @@
 			sunSphere.update(sunAngle)
 		})
 
-
 		sunLight	= new THREEx.DayNight.SunLight()
 		scene.add( sunLight.object3d )
 		onRenderFcts.push(function(delta, now){
@@ -96,48 +94,31 @@
 		onRenderFcts.push(function(delta, now){
 			skydom.update(sunAngle)
 		})
-
-        //	Eclairage
-        // var lumiere = new THREE.Mesh(new THREE.SphereGeometry(10, 20, 20), new THREE.MeshBasicMaterial({color: 0xff0000}));
-        // lumiere.position.x = 400;	lumiere.position.y = 600;	lumiere.position.z = -100;
-        // scene.add( lumiere );
-
-        // spotLight = new THREE.SpotLight( 0xffffff );
-        // spotLight.position.set( 400, 600, -100 );
-        // spotLight.castShadow = true;
-        // scene.add( spotLight );
-
-
-
-
     }
 
     var lastTimeMsec= null;
 
-    function render() {
-        stats.begin();
+    onRenderFcts.push(function(){
+		renderer.render( scene, camera );		
+	})   
 
-		requestAnimationFrame(function animate(nowMsec){
-			// keep looping
-			requestAnimationFrame( animate );
-			// measure time
-			lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
-			var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
-			lastTimeMsec	= nowMsec
-			// call each update function
-			onRenderFcts.forEach(function(onRenderFct){
-				onRenderFct(deltaMsec/1000, nowMsec/1000)
-			})
+	requestAnimationFrame(function animate(nowMsec){
+		stats.begin();
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		// call each update function
+		onRenderFcts.forEach(function(onRenderFct){
+			onRenderFct(deltaMsec/1000, nowMsec/1000)
 		})
 
+	controls.update();
+    stats.end();
+	})
 
-        requestAnimationFrame(render);
-
-        controls.update();
-        renderer.render(scene, camera);
-
-        stats.end();
-    }
     </script>
 </body>
 
