@@ -1,103 +1,144 @@
 <html>
-	<head>
-		<title>Batô</title>
-		<style>
-			body { margin: 0;} 
-			canvas { width: 100%; height: 100%;}
-		</style>
-		<meta charset="utf-8">
-	</head>
 
-	<body>
-		<script src="lib/three.js/three.min.js"></script>
-		<script src="lib/three.js/Detector.js"></script>
-		<script src="lib/three.js/controls/OrbitControls.js"></script>
-		<script src="lib/stats.min.js"></script> <!-- https://github.com/mrdoob/stats.js -->
-		<script src="js/stats.js"></script>
-		<script>
+<head>
+    <title>Batô</title>
+    <style>
+    body {
+        margin: 0;
+        background-color: #bbbbbb;
+        overflow: hidden;
+    }
+    
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+    <meta charset="utf-8">
+</head>
 
-		    var scene, camera, renderer;
-		    var geometry, material, material2, mesh, cube;
-			var material3, cube3;
-			var spotlight;
-			
-			
-		    init();
-			move();
-		    render();
-			
-			
-			
-			function init() {
-				scene = new THREE.Scene();
-
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-				camera.position.z = 1000;
-				
-				renderer = new THREE.WebGLRenderer();
-
-				geometry = new THREE.BoxGeometry( 200, 200, 200 );
-
-				controls = new THREE.OrbitControls( camera );
-
-				//	Cube file de fer
-				material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-				mesh = new THREE.Mesh(geometry, material);
-				scene.add( mesh );
-
-				// Cube vert
-				material2 = new THREE.MeshBasicMaterial( {color: 0x00ff00 });
-				cube = new THREE.Mesh(geometry, material2);
-				scene.add( cube );
-
-				// 	Cube texturé
-				material3 = new THREE.MeshLambertMaterial({color: 0x7777ff});
-				cube3 = new THREE.Mesh(geometry, material3);
-				cube3.castShadow = true;
-				cube3.receiveShadow = true;
-
-				scene.add( cube3 );
-
-				//	Eclairage
-				var lumiere = new THREE.Mesh(new THREE.SphereGeometry(10, 20, 20), new THREE.MeshBasicMaterial({color: 0xff0000}));
-				lumiere.position.x = 400;	lumiere.position.y = 600;	lumiere.position.z = -100;
-				scene.add( lumiere );
-
-				spotLight = new THREE.SpotLight( 0xffffff );
-				spotLight.position.set( 400, 600, -100 );
-				spotLight.castShadow = true;
-				scene.add( spotLight );
-
-				//	Rendu
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
-				renderer.shadowMapEnabled = true;
+<body>
+    <script src="lib/three.js/three.min.js"></script>
+    <script src="lib/three.js/Detector.js"></script>
+    <script src="lib/three.js/controls/OrbitControls.js"></script>
+    <script src="lib/threex.daynight.js"></script>
+    <script src="lib/stats.min.js"></script>
+    <!-- https://github.com/mrdoob/stats.js -->
+    <script src="js/stats.js"></script>
+    <script>
+    var scene, camera, renderer;
+    var geometry, material, material2, mesh, cube;
+    var material3, cube3;
+    var spotlight;
+    var sunSphere, sunLight, starField, sunAngle, skydom, dayDuration, delta;
+    var onRenderFcts = [];
 
 
-				document.body.appendChild( renderer.domElement );
-		    }
+    init();
+    render();
 
-		    function render() {
-				stats.begin();
-				requestAnimationFrame( render );
-				
-				
-				mesh.rotation.x += 0.01;
-				mesh.rotation.y += 0.02;
+    function init() {
+        scene = new THREE.Scene();
 
-				cube.rotation.y += 0.02;
-			
-				controls.update();		
-				renderer.render( scene, camera );	
-				stats.end();
-		    }
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.5, 3000);
+        camera.position.z = 1000;
+
+        renderer = new THREE.WebGLRenderer();
+
+        ////////////////////////	Rendu
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        // renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+        // renderer.shadowMapEnabled = true;
+        document.body.appendChild(renderer.domElement);
 
 
-			function move() {
-				cube.position.x += 400;
-				cube3.position.x -= 400;
-			}
 
-		</script>
-	</body>
+        ////////////////////////	Controle caméra
+        controls = new THREE.OrbitControls(camera);
+
+        //	Cube file de fer
+        material = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            wireframe: true
+        });
+        mesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 1000, 1000), material);
+        scene.add(mesh);
+
+
+        ////////////////////////	DayNight
+		sunAngle = -3/6*Math.PI*2;
+		onRenderFcts.push(function(delta, now){
+			dayDuration	= 10	// nb seconds for a full day cycle
+			sunAngle	+= delta/dayDuration * Math.PI*2
+		})
+
+		starField	= new THREEx.DayNight.StarField()
+		scene.add(starField.object3d)
+		onRenderFcts.push(function(delta, now){
+			starField.update(sunAngle)
+		})
+
+		sunSphere	= new THREEx.DayNight.SunSphere()
+		scene.add( sunSphere.object3d )
+		onRenderFcts.push(function(delta, now){
+			sunSphere.update(sunAngle)
+		})
+
+
+		sunLight	= new THREEx.DayNight.SunLight()
+		scene.add( sunLight.object3d )
+		onRenderFcts.push(function(delta, now){
+			sunLight.update(sunAngle)
+		})
+
+		skydom	= new THREEx.DayNight.Skydom()
+		scene.add( skydom.object3d )
+		onRenderFcts.push(function(delta, now){
+			skydom.update(sunAngle)
+		})
+
+        //	Eclairage
+        // var lumiere = new THREE.Mesh(new THREE.SphereGeometry(10, 20, 20), new THREE.MeshBasicMaterial({color: 0xff0000}));
+        // lumiere.position.x = 400;	lumiere.position.y = 600;	lumiere.position.z = -100;
+        // scene.add( lumiere );
+
+        // spotLight = new THREE.SpotLight( 0xffffff );
+        // spotLight.position.set( 400, 600, -100 );
+        // spotLight.castShadow = true;
+        // scene.add( spotLight );
+
+
+
+
+    }
+
+    var lastTimeMsec= null;
+
+    function render() {
+        stats.begin();
+
+		requestAnimationFrame(function animate(nowMsec){
+			// keep looping
+			requestAnimationFrame( animate );
+			// measure time
+			lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+			var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+			lastTimeMsec	= nowMsec
+			// call each update function
+			onRenderFcts.forEach(function(onRenderFct){
+				onRenderFct(deltaMsec/1000, nowMsec/1000)
+			})
+		})
+
+
+        requestAnimationFrame(render);
+
+        controls.update();
+        renderer.render(scene, camera);
+
+        stats.end();
+    }
+    </script>
+</body>
+
 </html>
