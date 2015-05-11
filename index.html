@@ -18,17 +18,24 @@
 </head>
 
 <body>
+    <!-- THREE JS scripts -->
     <script src="lib/three.js/three.min.js"></script>
     <script src="lib/three.js/Detector.js"></script>
     <script src="lib/three.js/controls/OrbitControls.js"></script>
+    
+    <!-- Libs externes -->
     <script src="lib/threex.daynight.js"></script>
-    <script src="lib/stats.min.js"></script>
-    <!-- https://github.com/mrdoob/stats.js -->
+    <script src="lib/stats.min.js"></script>    <!-- https://github.com/mrdoob/stats.js -->
+
+    <!-- Game core et extension -->
     <script src="js/stats.js"></script>
+    
+    
     <script>
     var scene, camera, renderer;
     var sunSphere, sunLight, starField, sunAngle, skydom, dayDuration, delta;
-    var onRenderFcts = [];
+
+    var onRenderFcts = [];      // stock les fonctions qui doivent être exécuté à chaque rendu
 
 
     init();
@@ -64,7 +71,8 @@
 		scene.add( plane );
 
 
-        ////////////////////////	DayNight
+        ////////////////////////	DayNight via THREEX.daynight
+        // A corriger !
 		sunAngle = -3/6*Math.PI*2;
 		onRenderFcts.push(function(delta, now){
 			dayDuration	= 60	// nb seconds for a full day cycle

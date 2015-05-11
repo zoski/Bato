@@ -1,3 +1,6 @@
+//	stats.js
+//	Gére l'affichage des statistiques en haut à gauche de la fenêtre
+
 var stats = new Stats();
 stats.setMode(0); // 0: fps, 1: ms
 

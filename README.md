@@ -17,8 +17,8 @@ Projet de 2eme année Informatique et Réseau.
  ...
 
 ## Organisation du projet
- * lib
- * js
+ * lib	: rassemble les bibliothéques externes
+ * js	: game core (notre code)
  * models
  * sounds
  * images
