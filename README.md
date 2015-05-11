@@ -3,8 +3,10 @@ Projet de 2eme année Informatique et Réseau.
 
 ## TODO
  - [ ] Roadmap
+ - [ ] Architecture du Projet / UML
  - [ ] Première scene
 	- [x] Camera
+	- [x] Jour/Nuit
 	- [ ] Fonds
 	- [ ] Mer
 	- [ ] Bateau
@@ -13,6 +15,8 @@ Projet de 2eme année Informatique et Réseau.
 	- [ ] Bateau
 	- [ ] Vague
 	- [ ] Vent
+	- [ ] Lune
+	- [ ] Soleil
 	- [ ] ...
  ...
 

@@ -22,111 +22,114 @@
     <script src="lib/three.js/three.min.js"></script>
     <script src="lib/three.js/Detector.js"></script>
     <script src="lib/three.js/controls/OrbitControls.js"></script>
-    
     <!-- Libs externes -->
     <script src="lib/threex.daynight.js"></script>
-    <script src="lib/stats.min.js"></script>    <!-- https://github.com/mrdoob/stats.js -->
-
+    <script src="lib/stats.min.js"></script>
+    <!-- https://github.com/mrdoob/stats.js -->
     <!-- Game core et extension -->
     <script src="js/stats.js"></script>
-    
-    
     <script>
-    var scene, camera, renderer;
-    var sunSphere, sunLight, starField, sunAngle, skydom, dayDuration, delta;
-
-    var onRenderFcts = [];      // stock les fonctions qui doivent être exécuté à chaque rendu
-
+    var onRenderFcts = []; // stock les fonctions qui doivent être exécuté à chaque rendu
 
     init();
-    
+    daynight();
+
+    var scene, camera, renderer, controls;
+
     function init() {
-        scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 3000);
-        camera.position.z = 3;
-        camera.position.y = 3;
+            scene = new THREE.Scene();
 
-        ////////////////////////	Rendu
-        renderer = new THREE.WebGLRenderer( { antialias: true } );
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        // renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
-        // renderer.shadowMapEnabled = true;
-        document.body.appendChild(renderer.domElement);
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 3000);
+            camera.position.z = 3;
+            camera.position.y = 3;
 
-        ////////////////////////	Controle caméra
-        controls = new THREE.OrbitControls(camera);
+            ////////////////////////    Rendu
+            renderer = new THREE.WebGLRenderer({
+                antialias: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+            // renderer.shadowMapEnabled = true;
+            document.body.appendChild(renderer.domElement);
 
-        ////////////////////////	Plane
-        var material = new THREE.MeshPhongMaterial({
-        	shading	: THREE.SmoothShading,
-            color: 0xff0000,
-            side: THREE.DoubleSide
-        });
+            ////////////////////////    Controle caméra
+            controls = new THREE.OrbitControls(camera);
 
-        var geometry = new THREE.PlaneGeometry( 5, 5 );
-        var material = new THREE.MeshPhongMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-		var plane = new THREE.Mesh( geometry, material );
-		plane.rotateX(Math.PI/2)
-		scene.add( plane );
+            ////////////////////////    Plane
+            var material = new THREE.MeshPhongMaterial({
+                shading: THREE.SmoothShading,
+                color: 0xff0000,
+                side: THREE.DoubleSide
+            });
+
+            var geometry = new THREE.PlaneGeometry(5, 5);
+            var material = new THREE.MeshPhongMaterial({
+                color: 0xffff00,
+                side: THREE.DoubleSide
+            });
+            var plane = new THREE.Mesh(geometry, material);
+            plane.rotateX(Math.PI / 2);
+            scene.add(plane);
+        } //</init>
+
+    var sunSphere, sunLight, starField, sunAngle, skydom, dayDuration, delta;
+
+    function daynight() { //    DayNight via THREEX.daynight
+            sunAngle = -3 / 6 * Math.PI * 2;
+            onRenderFcts.push(function(delta, now) {
+                dayDuration = 60 // nb seconds for a full day cycle
+                sunAngle += delta / dayDuration * Math.PI * 2
+            })
+
+            starField = new THREEx.DayNight.StarField()
+            scene.add(starField.object3d)
+            onRenderFcts.push(function(delta, now) {
+                starField.update(sunAngle)
+            })
+
+            sunSphere = new THREEx.DayNight.SunSphere()
+            scene.add(sunSphere.object3d)
+            onRenderFcts.push(function(delta, now) {
+                sunSphere.update(sunAngle)
+            })
+
+            sunLight = new THREEx.DayNight.SunLight()
+            scene.add(sunLight.object3d)
+            onRenderFcts.push(function(delta, now) {
+                sunLight.update(sunAngle)
+            })
+
+            skydom = new THREEx.DayNight.Skydom()
+            scene.add(skydom.object3d)
+            onRenderFcts.push(function(delta, now) {
+                skydom.update(sunAngle)
+            })
+        } //</daynight>
 
 
-        ////////////////////////	DayNight via THREEX.daynight
-        // A corriger !
-		sunAngle = -3/6*Math.PI*2;
-		onRenderFcts.push(function(delta, now){
-			dayDuration	= 60	// nb seconds for a full day cycle
-			sunAngle	+= delta/dayDuration * Math.PI*2
-		})
+    var lastTimeMsec = null;
 
-		starField	= new THREEx.DayNight.StarField()
-		scene.add(starField.object3d)
-		onRenderFcts.push(function(delta, now){
-			starField.update(sunAngle)
-		})
+    onRenderFcts.push(function() {
+        renderer.render(scene, camera);
+    })
 
-		sunSphere	= new THREEx.DayNight.SunSphere()
-		scene.add( sunSphere.object3d )
-		onRenderFcts.push(function(delta, now){
-			sunSphere.update(sunAngle)
-		})
+    requestAnimationFrame(function animate(nowMsec) {
+        stats.begin();
+        // keep looping
+        requestAnimationFrame(animate);
+        // measure time
+        lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60
+        var deltaMsec = Math.min(200, nowMsec - lastTimeMsec)
+        lastTimeMsec = nowMsec
+            // call each update function
+        onRenderFcts.forEach(function(onRenderFct) {
+            onRenderFct(deltaMsec / 1000, nowMsec / 1000)
+        })
 
-		sunLight	= new THREEx.DayNight.SunLight()
-		scene.add( sunLight.object3d )
-		onRenderFcts.push(function(delta, now){
-			sunLight.update(sunAngle)
-		})
-
-		skydom	= new THREEx.DayNight.Skydom()
-		scene.add( skydom.object3d )
-		onRenderFcts.push(function(delta, now){
-			skydom.update(sunAngle)
-		})
-    }
-
-    var lastTimeMsec= null;
-
-    onRenderFcts.push(function(){
-		renderer.render( scene, camera );		
-	})   
-
-	requestAnimationFrame(function animate(nowMsec){
-		stats.begin();
-		// keep looping
-		requestAnimationFrame( animate );
-		// measure time
-		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
-		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
-		lastTimeMsec	= nowMsec
-		// call each update function
-		onRenderFcts.forEach(function(onRenderFct){
-			onRenderFct(deltaMsec/1000, nowMsec/1000)
-		})
-
-	controls.update();
-    stats.end();
-	})
-
+        controls.update();
+        stats.end();
+    })
     </script>
 </body>
 
