@@ -26,23 +26,40 @@
     <script src="lib/threex.daynight.js"></script>
     <script src="lib/stats.min.js"></script>
     <!-- https://github.com/mrdoob/stats.js -->
+
+
     <!-- Game core et extension -->
-    <script src="js/stats.js"></script>
+    <script src="js/stats.js"></script><!-- https://github.com/mrdoob/stats.js -->
+
+    <script src="js/dayAndNight.js"></script>
+    <script src="js/light.js"></script>
+
     <script>
+
     var onRenderFcts = []; // stock les fonctions qui doivent être exécuté à chaque rendu
+    var dayAndNight = true ;
 
     init();
-    daynight();
+    devLight();
+
+    if(dayAndNight) {
+        daynight();
+        
+    }
+
 
     var scene, camera, renderer, controls;
-
     function init() {
 
             scene = new THREE.Scene();
-
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 3000);
-            camera.position.z = 3;
-            camera.position.y = 3;
+            // FOV, Ratio Largeur/ Hauteur , Distance de vue proche , Distance max de vue
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
+            camera.position.z = 5;
+            camera.position.y = 2;
+            var b = new THREE.Vector3( 0, 10, 0 );
+            camera.lookAt(b);
+            
+            
 
             ////////////////////////    Rendu
             renderer = new THREE.WebGLRenderer({
@@ -56,64 +73,61 @@
             ////////////////////////    Controle caméra
             controls = new THREE.OrbitControls(camera);
 
-            ////////////////////////    Plane
-            var material = new THREE.MeshPhongMaterial({
+            ////////////////////////    Mer
+            var sea_material = new THREE.MeshPhongMaterial({
                 shading: THREE.SmoothShading,
-                color: 0xff0000,
+                color: 0x0092ff, //blue
                 side: THREE.DoubleSide
             });
 
-            var geometry = new THREE.PlaneGeometry(5, 5);
-            var material = new THREE.MeshPhongMaterial({
-                color: 0xffff00,
-                side: THREE.DoubleSide
+            var sea_geometry = new THREE.PlaneGeometry(1000, 1000);
+
+            var sea = new THREE.Mesh(sea_geometry, sea_material);
+            sea.rotateX(Math.PI / 2);
+
+            scene.add(sea);
+
+            ///////////////////////// Batô
+            var boat = new THREE.Group();
+            scene.add(boat);
+
+            var boat_material = new THREE.MeshPhongMaterial({
+                //shading: THREE.SmoothShading,
+                //color: 0x0092ff //brown
             });
-            var plane = new THREE.Mesh(geometry, material);
-            plane.rotateX(Math.PI / 2);
-            scene.add(plane);
+
+            var boat_base_geometry = new THREE.BoxGeometry(1, 0.5, 2);
+            var boat_base = new THREE.Mesh( boat_base_geometry, boat_material );
+            boat_base.position.y = 0.25;
+            boat.add( boat_base );
+
+            var boat_mast_geometry = new THREE.BoxGeometry(0.1, 2, 0.1);
+            var boat_mast = new THREE.Mesh(boat_mast_geometry, boat_material);
+            boat_mast.position.y = 1;
+            boat.add( boat_mast );
+
+
+            //////////////////////// Cube taille d'une île
+            var island_geo = new THREE.BoxGeometry(5, 1, 5);
+            var island_mat = new THREE.MeshLambertMaterial({
+                shading: THREE.SmoothShading,
+                color: 0xaaaaaa
+            });
+            var island = new THREE.Mesh(island_geo, island_mat);
+            island.position.z = -200;
+
+            scene.add(island);
+
         } //</init>
 
-    var sunSphere, sunLight, starField, sunAngle, skydom, dayDuration, delta;
-
-    function daynight() { //    DayNight via THREEX.daynight
-            sunAngle = -3 / 6 * Math.PI * 2;
-            onRenderFcts.push(function(delta, now) {
-                dayDuration = 60 // nb seconds for a full day cycle
-                sunAngle += delta / dayDuration * Math.PI * 2
-            })
-
-            starField = new THREEx.DayNight.StarField()
-            scene.add(starField.object3d)
-            onRenderFcts.push(function(delta, now) {
-                starField.update(sunAngle)
-            })
-
-            sunSphere = new THREEx.DayNight.SunSphere()
-            scene.add(sunSphere.object3d)
-            onRenderFcts.push(function(delta, now) {
-                sunSphere.update(sunAngle)
-            })
-
-            sunLight = new THREEx.DayNight.SunLight()
-            scene.add(sunLight.object3d)
-            onRenderFcts.push(function(delta, now) {
-                sunLight.update(sunAngle)
-            })
-
-            skydom = new THREEx.DayNight.Skydom()
-            scene.add(skydom.object3d)
-            onRenderFcts.push(function(delta, now) {
-                skydom.update(sunAngle)
-            })
-        } //</daynight>
-
-
+    ////////////////// Gestion du temps
     var lastTimeMsec = null;
 
     onRenderFcts.push(function() {
         renderer.render(scene, camera);
     })
 
+    ///////////////////// Animation
     requestAnimationFrame(function animate(nowMsec) {
         stats.begin();
         // keep looping
