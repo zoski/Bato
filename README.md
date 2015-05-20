@@ -10,7 +10,7 @@ Projet de 2eme année Informatique et Réseau.
 	- [ ] Fonds
 	- [ ] Mer
 	- [ ] Bateau
- - [ ] Github Page
+ - [x] Github Page
  - [ ] Models
 	- [ ] Bateau
 	- [ ] Vague
