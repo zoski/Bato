@@ -56,9 +56,9 @@
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 5;
             camera.position.y = 2;
-            var b = new THREE.Vector3( 0, 10, 0 );  //ne semble pas marcher
-            camera.lookAt(b);
 
+            //var b = new THREE.Vector3( 0, 10, 0 );
+            //camera.lookAt(b); //OrbitControls s'en occupe
 
 
             ////////////////////////    Rendu
@@ -72,6 +72,12 @@
 
             ////////////////////////    Controle caméra
             controls = new THREE.OrbitControls(camera);
+
+            controls.minDistance = 3;
+            controls.maxDistance = 10;
+            //controls.setPolarAngle = 80
+            controls.minPolarAngle = THREE.Math.degToRad(0);
+            controls.maxPolarAngle = THREE.Math.degToRad(95);
 
             ////////////////////////    Mer
             var sea_material = new THREE.MeshPhongMaterial({
