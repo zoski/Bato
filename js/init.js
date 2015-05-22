@@ -7,6 +7,7 @@ var scene, camera, renderer, controls;
 var worldSize = 10000;
 var minView = 0.1;
 var maxView = 500;
+
 function init() {
 
   ///////////////////////////////////////////////////////////////
