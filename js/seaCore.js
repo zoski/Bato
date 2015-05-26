@@ -31,9 +31,7 @@
 
     this.maxIsland = maxIsland;
 
-    var mat = new THREE.MeshBasicMaterial({
-      color: 0xaaaaaa
-    });
+    var mat = new THREE.MeshNormalMaterial();
 
     this.generate = function () {
       for(var i = 0 ; i < maxIsland ; i++) {

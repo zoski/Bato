@@ -37,8 +37,7 @@ function init() {
   scene.add( new THREE.AxisHelper() );
 
   //      Sea
-  var sea_material = new THREE.MeshBasicMaterial({
-    color: 0x0092ff, //blue
+  var sea_material = new THREE.MeshNormalMaterial({
     side: THREE.DoubleSide
   });
 
@@ -53,8 +52,8 @@ function init() {
   var boat = new THREE.Group();
   scene.add(boat);
 
-  var boat_material = new THREE.MeshBasicMaterial({
-    color: 0x00ff00
+  var boat_material = new THREE.MeshNormalMaterial({
+    //color: 0x00ff00
     //shading: THREE.SmoothShading,
     //color: 0x0092ff //brown
   });

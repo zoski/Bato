@@ -27,12 +27,12 @@
 	var heightSegments = 1000 ;
 
 	var water ;
-
-  var sea_material = new THREE.MeshBasicMaterial({
-		wireframe : true,
-		color : 0x0092ff,
-		shading : true
-	});
+	var sea_material = new THREE.	MeshNormalMaterial();
+  // var sea_material = new THREE.MeshBasicMaterial({
+	// 	wireframe : true,
+	// 	color : 0x0092ff,
+	// 	shading : true
+	// });
 
   var sea_geometry = new THREE.PlaneBufferGeometry(worldSize, worldSize, widthSegments, heightSegments);
 
@@ -40,23 +40,6 @@
   sea.rotateX(Math.PI / 2);
 
   scene.add(sea);
-
-
-	var geometry = new THREE.CylinderGeometry( 0, 20, 100, 3 );
-	var material = new THREE.MeshBasicMaterial({
-		wireframe : true,
-		color : 0xff0000});
-																//
-	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 50, 0 ) );
-	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
-
-	helper = new THREE.Mesh( geometry, material);
-	helper.position.set(0,4,0);
-	helper.scale.set(1,3,1);
-	scene.add( helper );
-
-
-
 
 	animate();
 
