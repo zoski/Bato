@@ -34,6 +34,8 @@ function init() {
   ///////////////////////////////////////////////////////////////
   //      Objects
 
+  scene.add( new THREE.AxisHelper() );
+
   //      Sea
   var sea_material = new THREE.MeshBasicMaterial({
     color: 0x0092ff, //blue
