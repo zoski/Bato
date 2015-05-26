@@ -1,0 +1,65 @@
+<html>
+<head>
+	<title>Waves</title>
+	<style>
+	body { margin: 0; }
+	canvas { width: 100%; height: 100% }
+	</style>
+	<meta charset="utf-8">
+</head>
+<body>
+	<script src="lib/three.js/three.min.js"></script>
+	<script src="lib/three.js/controls/OrbitControls.js"></script>
+	<script src="lib/stats.min.js"></script>
+
+	<script src="js/stats.js"></script>
+
+	<script src="js/initWaves.js"></script>
+	<script src="js/waves.js"></script>
+	<script src="js/render.js"></script>
+	<script>
+
+	init();
+
+
+	//      Sea
+	var widthSegments = 1000 ;
+	var heightSegments = 1000 ;
+
+	var water ;
+
+  var sea_material = new THREE.MeshBasicMaterial({
+		wireframe : true,
+		color : 0x0092ff,
+		shading : true
+	});
+
+  var sea_geometry = new THREE.PlaneBufferGeometry(worldSize, worldSize, widthSegments, heightSegments);
+
+  var sea = new THREE.Mesh(sea_geometry, sea_material);
+  sea.rotateX(Math.PI / 2);
+
+  scene.add(sea);
+
+
+	var geometry = new THREE.CylinderGeometry( 0, 20, 100, 3 );
+	var material = new THREE.MeshBasicMaterial({
+		wireframe : true,
+		color : 0xff0000});
+																//
+	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 50, 0 ) );
+	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
+
+	helper = new THREE.Mesh( geometry, material);
+	helper.position.set(0,4,0);
+	helper.scale.set(1,3,1);
+	scene.add( helper );
+
+
+
+
+	animate();
+
+	</script>
+</body>
+</html>
