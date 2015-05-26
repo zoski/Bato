@@ -15,7 +15,7 @@
     }
     </style>
     <meta charset="utf-8">
-    
+
 </head>
 
 <body>
@@ -71,12 +71,17 @@
             // renderer.shadowMapEnabled = true;
             document.body.appendChild(renderer.domElement);
 
-            ////////////////////////    Controle caméra
+            ////////////////////////    Control camera with the lib OrbitControls
             controls = new THREE.OrbitControls(camera);
 
+            //desactivate pan of the camera
+            controls.noPan = true;
+
+            //set camera's distance around the target
             controls.minDistance = 3;
             controls.maxDistance = 10;
-            //controls.setPolarAngle = 80
+
+            //set angle to unable being under the sea
             controls.minPolarAngle = THREE.Math.degToRad(0);
             controls.maxPolarAngle = THREE.Math.degToRad(95);
 
@@ -114,6 +119,84 @@
             boat.add( boat_mast );
 
 
+            boat.add(controls);
+            controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+            //boat.rotation.y = 10;
+            var velocity = new THREE.Vector3(1,1,1);
+            var turning = new THREE.Vector2(5,5);
+            //hasturned is used to count +1 when left, -1 when right
+            //it helps for the trigonometry when you go straight after turning
+            var hasturned = 0;
+            var canJump;
+
+            //Variable projection Helper:
+            var turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
+            var turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
+
+            var onKeyDown = function ( event ) {
+
+              switch ( event.keyCode ) {
+
+                case 38: // up
+                case 90: // z
+                  controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+                  //boat.position.z -= velocity.z;  //MARCHE
+                  boat.position.z -= turnCos;
+                  boat.position.x -= turnSin;
+                  //camera.position.z -= velocity.z;
+                  camera.position.z -= turnCos;
+                  camera.position.x -= turnSin;
+                  //controls.update();
+                  break;
+
+                case 37: // left
+                case 81: // q
+                  //moveLeft = true;
+                  hasturned += 1;
+                  controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+                  //boat.position.x -= velocity.x;
+                  boat.rotation.y += THREE.Math.degToRad(turning.x);
+                  //camera.position.x -= velocity.x;
+                  //controls.update();
+                  turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
+                  turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
+                  break;
+/*
+                //disable: a boat doesnt go back
+                case 40: // down
+                case 83: // s
+                  //moveBackward = true;
+                  controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+                  boat.position.z += velocity.z;
+                  camera.position.z += velocity.z;
+                  controls.update();
+                  break;
+*/
+                  case 39: // right
+                  case 68: // d
+                    //moveRight = true;
+                    hasturned -= 1;
+                    controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+                    boat.rotation.y -= THREE.Math.degToRad(turning.y);
+                    //boat.position.x += velocity.x;
+                    //camera.position.x += velocity.x;
+                    //controls.update();
+                    turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
+                    turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
+                    break;
+/*
+                  //disable for now //jumping
+                  case 32: // space
+                    if ( canJump === true ) boat.position.y += 2;
+                      canJump = false;
+                      break;
+*/
+                }
+
+              };
+
+              document.addEventListener( 'keydown', onKeyDown, false );
+
             //////////////////////// Cube taille d'une île
             var island_geo = new THREE.BoxGeometry(5, 1, 5);
             var island_mat = new THREE.MeshLambertMaterial({
@@ -148,7 +231,7 @@
             onRenderFct(deltaMsec / 1000, nowMsec / 1000)
         })
 
-        controls.update();
+        //controls.update();
         stats.end();
     })
     </script>
