@@ -26,8 +26,9 @@
 	var widthSegments = 1000 ;
 	var heightSegments = 1000 ;
 
-	var water ;
-	var sea_material = new THREE.	MeshNormalMaterial();
+	var sea_material = new THREE.	MeshNormalMaterial({
+		side: THREE.DoubleSide
+	});
   // var sea_material = new THREE.MeshBasicMaterial({
 	// 	wireframe : true,
 	// 	color : 0x0092ff,
@@ -39,7 +40,29 @@
   var sea = new THREE.Mesh(sea_geometry, sea_material);
   sea.rotateX(Math.PI / 2);
 
-  scene.add(sea);
+	scene.add(sea);
+	/////////////////////////////////////////////////////////////
+	//
+	var geometry = new THREE.Geometry();
+
+	geometry.vertices.push(
+		new THREE.Vector3( -10,  10, 0 ),
+		new THREE.Vector3( -10, -10, 0 ),
+		new THREE.Vector3(  10, -10, 0 )
+	);
+
+	geometry.faces.push( new THREE.Face3( 0, 1, 2 ) );
+
+	// geometry.computeBoundingSphere();
+	var lol = new THREE.Mesh(geometry, sea_material);
+	scene.add(lol);
+	//
+	/////////////////////////////////////////////////////////////
+	console.log("Vertices : " + geometry.vertices[0]);
+	console.log("id :" + sea_geometry.id);
+	console.log("faces : " + sea_geometry.faces);
+
+
 
 	animate();
 

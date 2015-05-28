@@ -6,7 +6,10 @@ var scene, camera, renderer, controls;
 
 var worldSize = 10000;
 var minView = 0.1;
-var maxView = 500;
+var maxView = 1000;
+var wordVertice = 500;
+
+var onRenderFcts = []; // stock les fonctions qui doivent être exécuté à chaque rendu
 
 function init() {
 
@@ -36,17 +39,48 @@ function init() {
 
   scene.add( new THREE.AxisHelper() );
 
-  //      Sea
+  ////////////////////////      Sea
   var sea_material = new THREE.MeshNormalMaterial({
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    wireframe: true
   });
 
-  var sea_geometry = new THREE.PlaneBufferGeometry(worldSize, worldSize);
+  var sea_geometry = new THREE.PlaneGeometry(worldSize, worldSize, wordVertice, wordVertice);
 
   var sea = new THREE.Mesh(sea_geometry, sea_material);
   sea.rotateX(Math.PI / 2);
 
-  scene.add(sea);
+  // scene.add(sea);
+
+  ////////////////////////      Smaller sea
+  var small_sea_geometry = new THREE.PlaneGeometry( 100, 100, 10, 10);
+  var small_sea = new THREE.Mesh( small_sea_geometry, sea_material );
+  small_sea.rotateX(Math.PI / 2);
+  scene.add( small_sea );
+
+  ///////////////////////////////////////////////////////////////
+  //      animation
+
+  // var angle	= now*2 + position.y	 * 10;
+  // position.x	= origin.x + Math.cos(angle)*0.1;
+
+  var animation	= new THREEx.VertexAnimation(small_sea_geometry, function(origin, position, delta, now){
+		// here you put your formula, something clever which fit your needs
+    var speed	= 0.4 ;
+    var angle	= speed*now*Math.PI*2 + origin.y*10;
+		position.x	= origin.x + Math.cos(angle)*0.1;
+    position.y	= origin.y + Math.sin(angle*0.1);
+    position.z	= origin.z + Math.cos(angle)*0.5;
+	})
+	// update the animation at every frame
+  onRenderFcts.push(function(delta, now){
+		animation.update(delta, now)
+	})
+
+
+
+
+
 
   //       Boat
   var boat = new THREE.Group();
@@ -69,14 +103,5 @@ function init() {
   boat.add( boat_mast );
 
 
-  // Box to test island
-  // var island_geo = new THREE.BoxGeometry(5, 1, 5);
-  // var island_mat = new THREE.MeshBasicMaterial({
-  //   color: 0xaaaaaa
-  // });
-  // var island = new THREE.Mesh(island_geo, island_mat);
-  // island.position.z = -200;
-  //
-  // scene.add(island);
 
 } //</init>
