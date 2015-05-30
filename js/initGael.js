@@ -4,7 +4,9 @@
 
 var scene, camera, renderer, controls;
 
-var worldSize = 10000;
+var boat_position = new THREE.Vector3();
+
+var worldSize = 1000;
 var minView = 0.1;
 var maxView = 1000;
 var wordVertice = 500;
@@ -42,10 +44,10 @@ function init() {
   ////////////////////////      Sea
   var sea_material = new THREE.MeshNormalMaterial({
     side: THREE.DoubleSide,
-    wireframe: true
+    wireframe: false
   });
 
-  var sea_geometry = new THREE.PlaneGeometry(worldSize, worldSize, wordVertice, wordVertice);
+  var sea_geometry = new THREE.PlaneGeometry(worldSize, worldSize, 4, 4);
 
   var sea = new THREE.Mesh(sea_geometry, sea_material);
   sea.rotateX(Math.PI / 2);
@@ -54,9 +56,27 @@ function init() {
 
   ////////////////////////      Smaller sea
   var small_sea_geometry = new THREE.PlaneGeometry( 100, 100, 10, 10);
-  var small_sea = new THREE.Mesh( small_sea_geometry, sea_material );
-  small_sea.rotateX(Math.PI / 2);
+  var small_sea_material = new THREE.MeshNormalMaterial({
+    side: THREE.DoubleSide,
+    wireframe: true
+  });
+  var small_sea = new THREE.Mesh( small_sea_geometry, small_sea_material );
+  small_sea.rotateX(-Math.PI / 2);
+
   scene.add( small_sea );
+
+  // var edges = new THREE.FaceNormalsHelper( small_sea, 0x00ff00 );
+  // scene.add( edges );
+
+  ///////////////////////////////////////////////////////////////
+  //      RayCasting
+
+  var raycaster = new THREE.Raycaster();
+
+  // http://davidscottlyons.com/threejs/presentations/frontporch14/#slide-113
+
+
+
 
   ///////////////////////////////////////////////////////////////
   //      animation
@@ -71,6 +91,7 @@ function init() {
 		position.x	= origin.x + Math.cos(angle)*0.1;
     position.y	= origin.y + Math.sin(angle*0.1);
     position.z	= origin.z + Math.cos(angle)*0.5;
+
 	})
 	// update the animation at every frame
   onRenderFcts.push(function(delta, now){
@@ -78,13 +99,10 @@ function init() {
 	})
 
 
-
-
-
-
   //       Boat
   var boat = new THREE.Group();
   scene.add(boat);
+  console.log("Position du bateau : " + boat.position.x );
 
   var boat_material = new THREE.MeshNormalMaterial({
     //color: 0x00ff00

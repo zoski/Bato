@@ -5,16 +5,15 @@ function cool() {
   var islandGroup = new THREE.Group();
   scene.add(islandGroup);
 
-  var geometry = new IslandGeometryBuilder( 5, 5, 5) ;
-  //                    leworld, maxIsland, worldSize, threeScene
-  var gen = new WorldGenerator(leWorld, 1000, worldSize, scene);
+    //                    leworld, maxIsland, worldSize, threeScene
+  var gen = new WorldGenerator(leWorld, 25, worldSize, scene, true);
   // Generating island.
   gen.generate();
 
   var all = leWorld.get();
   console.log( "World : " + leWorld );
   console.log( all );
-  console.log( "Get random " + getRandom() );
+  console.log( "Get random " + getRandom(1, 10) );
 
   for (var i = 0; i < all.length; i++) {
     scene.add(all[i]);
