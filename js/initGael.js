@@ -4,7 +4,10 @@
 
 var scene, camera, renderer, controls;
 
+var boat ;
 var boat_position = new THREE.Vector3();
+var bbox;
+var sea, small_sea_geometry ;
 
 var worldSize = 1000;
 var minView = 0.1;
@@ -47,15 +50,15 @@ function init() {
     wireframe: false
   });
 
-  var sea_geometry = new THREE.PlaneGeometry(worldSize, worldSize, 4, 4);
+  sea_geometry = new THREE.PlaneGeometry(worldSize, worldSize, 4, 4);
 
-  var sea = new THREE.Mesh(sea_geometry, sea_material);
+  sea = new THREE.Mesh(sea_geometry, sea_material);
   sea.rotateX(Math.PI / 2);
 
   // scene.add(sea);
 
   ////////////////////////      Smaller sea
-  var small_sea_geometry = new THREE.PlaneGeometry( 100, 100, 10, 10);
+  small_sea_geometry = new THREE.PlaneGeometry( 100, 100, 10, 10);
   var small_sea_material = new THREE.MeshNormalMaterial({
     side: THREE.DoubleSide,
     wireframe: true
@@ -68,15 +71,9 @@ function init() {
   // var edges = new THREE.FaceNormalsHelper( small_sea, 0x00ff00 );
   // scene.add( edges );
 
-  ///////////////////////////////////////////////////////////////
-  //      RayCasting
-
-  var raycaster = new THREE.Raycaster();
-
-  // http://davidscottlyons.com/threejs/presentations/frontporch14/#slide-113
-
-
-
+  bbox = new THREE.BoundingBoxHelper( small_sea, 0x888888 );
+  bbox.update();
+  scene.add( bbox );
 
   ///////////////////////////////////////////////////////////////
   //      animation
@@ -84,14 +81,21 @@ function init() {
   // var angle	= now*2 + position.y	 * 10;
   // position.x	= origin.x + Math.cos(angle)*0.1;
 
-  var animation	= new THREEx.VertexAnimation(small_sea_geometry, function(origin, position, delta, now){
+  var animation	= new THREEx.VertexAnimation(
+    small_sea_geometry, function(origin, position, delta, now ){
 		// here you put your formula, something clever which fit your needs
-    var speed	= 0.4 ;
-    var angle	= speed*now*Math.PI*2 + origin.y*10;
-		position.x	= origin.x + Math.cos(angle)*0.1;
-    position.y	= origin.y + Math.sin(angle*0.1);
-    position.z	= origin.z + Math.cos(angle)*0.5;
+    var speed	= 0.3 ;
+    var angle	= speed*now*Math.PI*2 + origin.y*10 + origin.x*5 ;
 
+		// position.x	= origin.x + Math.cos(angle)*0.1;
+    // position.y	= origin.y + Math.sin(angle*0.1);
+    position.z	= origin.z + Math.cos(angle)*1 ;
+
+    // quand boat.x = 0 et y = 0
+    // Math.cos( angle - origin.x*5 - origin.y*10 )  = y
+
+    boat.position.y = Math.cos( angle - origin.x*5 - origin.y*10 + Math.abs( boat.position.x*10 ) - Math.abs( boat.position.z*5 ) ) ;
+    // console.log(position.x);
 	})
 	// update the animation at every frame
   onRenderFcts.push(function(delta, now){
@@ -100,9 +104,9 @@ function init() {
 
 
   //       Boat
-  var boat = new THREE.Group();
+  boat = new THREE.Group();
   scene.add(boat);
-  console.log("Position du bateau : " + boat.position.x );
+
 
   var boat_material = new THREE.MeshNormalMaterial({
     //color: 0x00ff00
@@ -120,6 +124,9 @@ function init() {
   boat_mast.position.y = 1;
   boat.add( boat_mast );
 
-
+  boat.translateZ( -10 );
+  boat.translateX( -30 );
+  console.log("boat position");
+  console.log( boat.position );
 
 } //</init>

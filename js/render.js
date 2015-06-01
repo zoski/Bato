@@ -3,7 +3,7 @@ function animate() {
 	///////////////////////////////////////////////////////////////
   //      Temps
   var lastTimeMsec = null;
-
+  var i = 0;
   onRenderFcts.push(function() {
       renderer.render(scene, camera);
   })
@@ -20,6 +20,13 @@ function animate() {
       onRenderFcts.forEach(function(onRenderFct) {
           onRenderFct(deltaMsec / 1000, nowMsec / 1000)
       })
+
+      // var delta = getClosestVertice( small_sea_geometry, boat );
+      // console.log( "delta = " + delta );
+
+      // boat.position.Y = delta ;
+      // console.log("boat position");
+      // console.log( boat.position );
 
       controls.update();
       stats.end();
