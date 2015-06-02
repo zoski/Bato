@@ -115,72 +115,24 @@
             boat_mast.position.y = 1;
             boat.add( boat_mast );
 
-/*
-            boat.add(controls);
-            controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
-            //boat.rotation.y = 10;
-            var velocity = new THREE.Vector3(1,1,1);
-            var turning = new THREE.Vector2(5,5);
-            //hasturned is used to count +1 when left, -1 when right
-            //it helps for the trigonometry when you go straight after turning
-            var hasturned = 0;
-            var canJump;
-
-            //Variable projection Helper:
-            var turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
-            var turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
-
-          var onKeyDown = function ( event ) {
-
-            if(event.keyCode == 38 || event.keyCode == 90){
-              controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
-              boat.position.z -= turnCos;
-              boat.position.x -= turnSin;
-              camera.position.z -= turnCos;
-              camera.position.x -= turnSin;
-              console.log("AVANCE !!!");
-            }
-
-              if(event.keyCode == 39|| event.keyCode == 68){
-                hasturned -= 1;
-                controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
-                boat.rotation.y -= THREE.Math.degToRad(turning.y);
-                //boat.position.x += velocity.x;
-                //camera.position.x += velocity.x;
-                //controls.update();
-                turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
-                turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
-                console.log("tourne !!!");
-              }
-
-              if(event.keyCode == 37|| event.keyCode == 81){
-                      //moveLeft = true;
-                      hasturned += 1;
-                      controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
-                      //boat.position.x -= velocity.x;
-                      boat.rotation.y += THREE.Math.degToRad(turning.x);
-                      //camera.position.x -= velocity.x;
-                      //controls.update();
-                      turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
-                      turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
-                    }
-              };
-
-              document.addEventListener( 'keydown', onKeyDown, false );
-*/
     var velocity = new THREE.Vector3(1,1,1);
     var turning = new THREE.Vector2(1,1);
     var hasturned = 0;
     var canJump;
 
     //Variable projection Helper:
-    var turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
-    var turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
+    var turnCos = Math.cos(THREE.Math.degToRad(turning.x*THREE.Math.radToDeg(boat.rotation.y)));
+    var turnSin = Math.sin(THREE.Math.degToRad(turning.y*THREE.Math.radToDeg(boat.rotation.y)));
 
     function updateTurn(){
       //problem if hasturned too much
-      turnCos = Math.cos(THREE.Math.degToRad(turning.x*hasturned));
-      turnSin = Math.sin(THREE.Math.degToRad(turning.y*hasturned));
+      //if(THREE.Math.degToRad(turning.x*boat.rotation.y)<=90 || THREE.Math.degToRad(turning.x*boat.rotation.y)>=90){
+        turnCos = Math.cos(THREE.Math.degToRad(turning.x*THREE.Math.radToDeg(boat.rotation.y)));
+        turnSin = Math.sin(THREE.Math.degToRad(turning.y*THREE.Math.radToDeg(boat.rotation.y)));
+      //}
+      //else {
+      //  turnSin = -Math.sin(THREE.Math.degToRad(turning.y*boat.rotation.y));
+      //}
     }
 
   	var keyboard	= new THREEx.KeyboardState(renderer.domElement);
@@ -190,11 +142,12 @@
     onRenderFcts.push(function(delta, now){
   		if( keyboard.pressed('left') || keyboard.pressed('q')){
   			boat.rotation.y += 1 * delta;
-        hasturned += 1;
+        console.log(boat.rotation.y);
+        //hasturned += 1;
         updateTurn();
   		}else if( keyboard.pressed('right') || keyboard.pressed('d')){
   			boat.rotation.y -= 1 * delta;
-        hasturned -= 1;
+        //hasturned -= 1;
         updateTurn();
   		}
   		if( keyboard.pressed('down') || keyboard.pressed('s')){
@@ -209,12 +162,17 @@
 */
   		}else if( keyboard.pressed('up') || keyboard.pressed('z')){
         //trigo
+
         controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
         boat.position.z -= turnCos;
         boat.position.x -= turnSin;
         camera.position.z -= turnCos;
         camera.position.x -= turnSin;
 
+        /*
+        var forward = new THREE.Vector3(0,0,-1);
+        boat.position.add(forward);
+        */
   		}
   	})
 /*
