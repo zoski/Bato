@@ -11,6 +11,7 @@ function cool() {
   gen.generate();
 
   var all = leWorld.get();
+  
   // console.log( "World : " + leWorld );
   // console.log( all );
 
@@ -25,10 +26,6 @@ function cool() {
   }
 
   // console.log( small_sea_geometry );
-
-
-
-
   // console.log( all.length );
   // console.log( islandGroup );
 }
