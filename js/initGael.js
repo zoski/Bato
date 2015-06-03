@@ -79,27 +79,16 @@ function init() {
 
   ///////////////////////////////////////////////////////////////
   //      animation
-
-  // var angle	= now*2 + position.y	 * 10;
-  // position.x	= origin.x + Math.cos(angle)*0.1;
-
   var animation	= new THREEx.VertexAnimation(
     small_sea_geometry, function(origin, position, delta, now ){
-		// here you put your formula, something clever which fit your needs
     var speed	= 0.1 ;
     var angle	= speed*now*Math.PI*2 + origin.y*10 + origin.x*5 ; // ; // ;
 
-		// position.x	= origin.x + Math.cos(angle)*0.1;
-    // position.y	= origin.y + Math.sin(angle*0.1);
     position.z	= origin.z + Math.cos(angle)*2 ;
-    // console.log(delta);
-    // quand boat.x = 0 et y = 0
-    // Math.cos( angle - origin.x*5 - origin.y*10 )  = y
 
-    boat.position.y = Math.cos( angle - origin.y*10 - (boat.position.z*2*Math.PI)/(121)  )*2 ;
-    // console.log(position.x);
+    boat.position.y = Math.cos( angle  - origin.x*5 - origin.y*10 + boat.position.x*now*Math.PI*2 - boat.position.z*now*Math.PI*2 )*2 ;
 	})
-	// update the animation at every frame
+    
   onRenderFcts.push(function(delta, now){
 		animation.update(delta, now)
 	})

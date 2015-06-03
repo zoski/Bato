@@ -29,7 +29,7 @@ function World() {
 //  complex     : Use the simple island builder (false) or
 //                the complex one.
 ///////////////////////////////////////////////////////////////
-function WorldGenerator( leworld, maxIsland, worldSize, threeScene, complex ) {
+function WorldGenerator( leworld, maxIsland, worldSize, threeScene, complex, flying ) {
 
   this.maxIsland = maxIsland;
 
@@ -58,9 +58,23 @@ function WorldGenerator( leworld, maxIsland, worldSize, threeScene, complex ) {
         5,
         10,
         mat).getMesh();
-      }
 
         leworld.push(tmp);
+
+        if(flying) {
+            //x, y, z, maxX, maxY, maxZ, radius, material
+            var tmpf = new Islands(
+              getRandom(-worldSize/2, worldSize/2),
+              getRandom(15, 250),
+              getRandom(-worldSize/2, worldSize/2),
+              5,
+              5,
+              5,
+              10,
+              mat).getMesh();
+            }
+              leworld.push(tmpf);
+        }
       }
     }
   }

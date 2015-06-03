@@ -65,15 +65,7 @@ function Islands( x, y, z, maxX, maxY, maxZ, radius, material ) {
     cube.position.z = getRandom( -radius/2, radius/2 );
     this.islands.add( cube );
   }
-
-  // var children = this.islands.children
-  // for( var i = 0 ; i< children.length ; i++ ) {
-  //   // Moving the cube
-  //   children[i].position = new THREE.Vector3( getRandom( -radius/2, radius/2 ), 0, getRandom( -radius/2, radius/2 ) );
-  //
-  // }
-
-
+  this.islands.rotation.y = getRandom( -2*Math.PI, 2*Math.PI );
 
   // Return the current Mesh
   // Used to add the object to the scene

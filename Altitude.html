@@ -1,0 +1,135 @@
+<html>
+	<head>
+		<title>Équation de l'atitude</title>
+		<meta charset="utf-8">
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<!-- Bibliotheques nécessaire -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://raw.githubusercontent.com/jeromeetienne/threex.vertexanimation/master/threex.vertexanimation.js"></script>
+
+		<script>
+
+			///////////////////////////////////////////////////////////////
+			//						Initialisation
+			//	Création de la scene, de la camera, du controle souris,
+			//	du render WebGL, ajout à la page.
+			///////////////////////////////////////////////////////////////
+			var onRenderFcts = [];	// stock les fonctions qui doivent être actualisé à chaque frame
+
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 1000 );
+			camera.position.z = 100;
+			camera.position.y = 50;
+
+			var renderer = new THREE.WebGLRenderer( {antialias: true} );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			var controls = new THREE.OrbitControls( camera );
+
+			scene.add( new THREE.AxisHelper() );
+
+			///////////////////////////////////////////////////////////////
+			//							Mer
+			//	Créatin d'un plan de taille 100 x 100.
+			//	Découpé par 10 segments selon x et z.
+			//
+			//	Rotation de l'objet mer afin qu'il soit dans plan x,y
+			///////////////////////////////////////////////////////////////
+			var sea_geometry = new THREE.PlaneGeometry( 100, 100, 10, 10);
+			var sea_material = new THREE.MeshNormalMaterial({
+		    	side: THREE.DoubleSide,
+		    	wireframe: true
+			});
+			var sea = new THREE.Mesh( sea_geometry, sea_material );
+		 	sea.rotateX(-Math.PI / 2);
+
+		  	scene.add( sea );
+
+			///////////////////////////////////////////////////////////////
+			//						Animation
+			//	Elle utilise la bibliothéque threex.vertexanimation
+			//	Modifie la "geometry" de la mer à l'aide des équations
+			//	suivantes
+			///////////////////////////////////////////////////////////////
+			var animation = new THREEx.VertexAnimation(
+		    	sea_geometry, function( origin, position, delta, now ) {
+
+					var speed	= 0.1 ;
+			    	var angle	= speed*now*Math.PI*2 + origin.y*10 + origin.x*5 ;
+
+					///////// Equation de la vague
+					//	maj de la position sur z car modification de l'altitude
+					//	axe z car la mer à du être rotaté de -PI/2 pour qu'elle
+					// 	soit à plat.
+			    	position.z	= origin.z + Math.cos(angle)*2 ;
+
+					////////////////////// ICI /////////////////////
+					//	l'équation de l'altitude du bateau axe y
+					//	ce que l'on essaye de trouver
+			    	boat.position.y = Math.cos( angle  - origin.x*5 - origin.y*10 )*2 ;
+				}
+			);
+
+			// Ajout au fonction à actualiser
+			onRenderFcts.push(function(delta, now) {
+				animation.update(delta, now)
+			})
+
+			///////////////////////////////////////////////////////////////
+			//							Bateau
+			//	Création d'un objet bateau composé de 2 cubes.
+			//	Position du bateau plus bas
+			///////////////////////////////////////////////////////////////
+		  	boat = new THREE.Group();
+		  	scene.add(boat);	// Ajout du groupe à la scene
+
+		  	var boat_material = new THREE.MeshNormalMaterial();
+		  	var boat_base_geometry = new THREE.BoxGeometry(1, 0.5, 2);
+		  	var boat_base = new THREE.Mesh( boat_base_geometry, boat_material );
+		  	boat_base.position.y = 0.25;
+		  	boat.add( boat_base );
+
+		  	var boat_mast_geometry = new THREE.BoxGeometry(0.1, 2, 0.1);
+		  	var boat_mast = new THREE.Mesh(boat_mast_geometry, boat_material);
+		  	boat_mast.position.y = 1;
+		  	boat.add( boat_mast );
+
+			///////////////////
+			//	Position du bateau
+			//  	boat.translateZ( 10 );
+			//  	boat.translateX( 10 );
+
+			///////////////////////////////////////////////////////////////
+			//						Rendu et animation
+			///////////////////////////////////////////////////////////////
+			var lastTimeMsec = null;
+			var i = 0;
+
+			onRenderFcts.push(function() {
+				renderer.render(scene, camera);
+			})
+
+			requestAnimationFrame(function animate(nowMsec) {
+				requestAnimationFrame(animate);	// animation
+				// Mesure du temps
+				lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60
+				var deltaMsec = Math.min(200, nowMsec - lastTimeMsec)
+				lastTimeMsec = nowMsec
+
+				// Appel des fonctions à actualiser
+				onRenderFcts.forEach(function(onRenderFct) {
+					onRenderFct(deltaMsec / 1000, nowMsec / 1000)
+					//			delta			now
+				});
+				controls.update();
+			});
+		</script>
+	</body>
+</html>

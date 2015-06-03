@@ -5,13 +5,13 @@ function cool() {
   var islandGroup = new THREE.Group();
   scene.add(islandGroup);
 
-    //                    leworld, maxIsland, worldSize, threeScene
-  var gen = new WorldGenerator(leWorld, 25, worldSize, scene, true);
+    //                    leworld, maxIsland, worldSize, threeScene, complex, withflying
+  var gen = new WorldGenerator(leWorld, 25, worldSize, scene, true, true);
   // Generating island.
   gen.generate();
 
   var all = leWorld.get();
-  
+
   // console.log( "World : " + leWorld );
   // console.log( all );
 
