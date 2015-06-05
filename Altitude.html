@@ -45,9 +45,9 @@
 			//	Rotation de l'objet mer afin qu'il soit dans plan x,y
 			///////////////////////////////////////////////////////////////
 			var sea_geometry = new THREE.PlaneGeometry( 100, 100, 10, 10);
-			var sea_material = new THREE.MeshNormalMaterial({
+			var sea_material = new THREE.MeshLambertMaterial({
 		    	side: THREE.DoubleSide,
-		    	wireframe: true
+		    	wireframe: false
 			});
 			var sea = new THREE.Mesh( sea_geometry, sea_material );
 		 	sea.rotateX(-Math.PI / 2);
@@ -73,12 +73,10 @@
 					if(posX%1.25!=0) {
 						// Calcule pour x
 						px = Math.round(posX/1.25)*1.25;
-						console.log(px);
 					}
 					if(posZ%1.25!=0) {
 						// calcule pour z
 						pz = Math.round(posZ/1.25)*1.25;
-						console.log(pz);
 					}
 					return Math.cos( angle  - oriX*5 - oriY*10 + px*5 - pz*10 )*2;
 				}

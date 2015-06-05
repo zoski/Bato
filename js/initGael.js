@@ -59,9 +59,10 @@ function init() {
 
   ////////////////////////      Smaller sea
   small_sea_geometry = new THREE.PlaneGeometry( 100, 100, 10, 10);
-  var small_sea_material = new THREE.MeshNormalMaterial({
+  var small_sea_material = new THREE.MeshLambertMaterial({
     side: THREE.DoubleSide,
-    wireframe: true
+    color: 0x33FFFF,
+    wireframe: false
   });
   var small_sea = new THREE.Mesh( small_sea_geometry, small_sea_material );
   small_sea.rotateX(-Math.PI / 2);
@@ -88,7 +89,7 @@ function init() {
 
     boat.position.y = Math.cos( angle  - origin.x*5 - origin.y*10 + boat.position.x*now*Math.PI*2 - boat.position.z*now*Math.PI*2 )*2 ;
 	})
-    
+
   onRenderFcts.push(function(delta, now){
 		animation.update(delta, now)
 	})
