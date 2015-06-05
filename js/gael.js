@@ -12,20 +12,7 @@ function cool() {
 
   var all = leWorld.get();
 
-  // console.log( "World : " + leWorld );
-  // console.log( all );
-
-  // for(var i=0 ; i < sea_geometry.vertices.length ; i++) {
-  //   var v = sea_geometry.vertices[i]
-  //   console.log( i + "\t ( " + v.x + ", " + v.y + ", " + v.z +" )" );
-  // }
-
-
   for (var i = 0; i < all.length; i++) {
     scene.add(all[i]);
   }
-
-  // console.log( small_sea_geometry );
-  // console.log( all.length );
-  // console.log( islandGroup );
 }
