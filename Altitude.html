@@ -22,6 +22,8 @@
 			///////////////////////////////////////////////////////////////
 			var onRenderFcts = [];	// stock les fonctions qui doivent être actualisé à chaque frame
 
+			var oriX ; var oriY ;	// copie de la position d'origin.
+
 			var scene = new THREE.Scene();
 			var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 1000 );
 			camera.position.z = 100;
@@ -53,6 +55,36 @@
 		  	scene.add( sea );
 
 			///////////////////////////////////////////////////////////////
+			//				Calcule de la position du Bateau
+			//	Utilise le temps et la postion x et z du bateau
+			///////////////////////////////////////////////////////////////
+			var boatPosition = function boatPosition(now, posX, posZ) {
+				var speed	= 0.1 ;
+				var angle	= speed*now*Math.PI*2 + oriY*10 + oriX*5 ;
+
+				if(posX%1.25==0 && posZ%1.25==0) {
+					return Math.cos( angle  - oriX*5 - oriY*10 + posX*5 - posZ*10 )*2;
+				} else {
+					// pas multiple de 1.25 -> on récupère 3 points puis moyenne
+					// Not yet implemented
+					var somme ;
+					var px = posX, pz = posZ ;
+
+					if(posX%1.25!=0) {
+						// Calcule pour x
+						px = Math.floor(posX/1.25)*1.25;
+						console.log(px);
+					}
+					if(posZ%1.25!=0) {
+						// calcule pour z
+						pz = Math.floor(posZ/1.25)*1.25;
+						console.log(pz);
+					}
+					return Math.cos( angle  - oriX*5 - oriY*10 + px*5 - pz*10 )*2;
+				}
+			}
+
+			///////////////////////////////////////////////////////////////
 			//						Animation
 			//	Elle utilise la bibliothéque threex.vertexanimation
 			//	Modifie la "geometry" de la mer à l'aide des équations
@@ -60,6 +92,7 @@
 			///////////////////////////////////////////////////////////////
 			var animation = new THREEx.VertexAnimation(
 		    	sea_geometry, function( origin, position, delta, now ) {
+					oriX = origin.x ; oriY = origin.y;
 
 					var speed	= 0.1 ;
 			    	var angle	= speed*now*Math.PI*2 + origin.y*10 + origin.x*5 ;
@@ -70,10 +103,6 @@
 					// 	soit à plat.
 			    	position.z	= origin.z + Math.cos(angle)*2 ;
 
-					////////////////////// ICI /////////////////////
-					//	l'équation de l'altitude du bateau axe y
-					//	ce que l'on essaye de trouver
-			    	boat.position.y = Math.cos( angle  - origin.x*5 - origin.y*10 )*2 ;
 				}
 			);
 
@@ -81,6 +110,7 @@
 			onRenderFcts.push(function(delta, now) {
 				animation.update(delta, now)
 			})
+
 
 			///////////////////////////////////////////////////////////////
 			//							Bateau
@@ -102,9 +132,9 @@
 		  	boat.add( boat_mast );
 
 			///////////////////
-			//	Position du bateau
-			//  	boat.translateZ( 10 );
-			//  	boat.translateX( 10 );
+				// Position du bateau
+			 	boat.translateZ( -15.5 );
+			 	boat.translateX(- 30 );
 
 			///////////////////////////////////////////////////////////////
 			//						Rendu et animation
@@ -129,6 +159,9 @@
 					//			delta			now
 				});
 				controls.update();
+
+				// Déplacement du bateau
+				boat.position.y = boatPosition( nowMsec / 1000, boat.position.x, boat.position.z ) ;
 			});
 		</script>
 	</body>
