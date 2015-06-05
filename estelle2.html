@@ -31,9 +31,9 @@
 
 
     <!-- Game core et extension -->
-    <script src="js/stats.js"></script><!-- https://github.com/mrdoob/stats.js -->
+    <script src="js/helper/stats.js"></script><!-- https://github.com/mrdoob/stats.js -->
 
-    <script src="js/dayAndNight.js"></script>
+    <script src="js/helper/dayAndNight.js"></script>
     <script src="js/light.js"></script>
 
     <script>
@@ -115,79 +115,73 @@
             boat_mast.position.y = 1;
             boat.add( boat_mast );
 
-    var velocity = new THREE.Vector3(1,1,1);
+            //boat.add();
+
+    //variables for the moves of the boat
+    var velocity = new THREE.Vector3(1,1,1);  //useless?
+    var boatSpeed = 0;
     var turning = new THREE.Vector2(1,1);
-    var hasturned = 0;
-    var canJump;
 
     //Variable projection Helper:
     var turnCos = Math.cos(THREE.Math.degToRad(turning.x*THREE.Math.radToDeg(boat.rotation.y)));
     var turnSin = Math.sin(THREE.Math.degToRad(turning.y*THREE.Math.radToDeg(boat.rotation.y)));
 
+    //update the direction in which the boat will move forward
     function updateTurn(){
-      //problem if hasturned too much
-      //if(THREE.Math.degToRad(turning.x*boat.rotation.y)<=90 || THREE.Math.degToRad(turning.x*boat.rotation.y)>=90){
         turnCos = Math.cos(THREE.Math.degToRad(turning.x*THREE.Math.radToDeg(boat.rotation.y)));
         turnSin = Math.sin(THREE.Math.degToRad(turning.y*THREE.Math.radToDeg(boat.rotation.y)));
-      //}
-      //else {
-      //  turnSin = -Math.sin(THREE.Math.degToRad(turning.y*boat.rotation.y));
-      //}
     }
 
+    //library for Keyboard event listener
   	var keyboard	= new THREEx.KeyboardState(renderer.domElement);
   	renderer.domElement.setAttribute("tabIndex", "0");
   	renderer.domElement.focus();
 
+    //first rotation is update then position
     onRenderFcts.push(function(delta, now){
+      var keyIsPressed = false;
   		if( keyboard.pressed('left') || keyboard.pressed('q')){
-  			boat.rotation.y += 1 * delta;
         console.log(boat.rotation.y);
-        //hasturned += 1;
+        keyIsPressed = true;
+  			boat.rotation.y += 1 * delta;
+        controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
         updateTurn();
   		}else if( keyboard.pressed('right') || keyboard.pressed('d')){
+        keyIsPressed = true;
   			boat.rotation.y -= 1 * delta;
-        //hasturned -= 1;
+        controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
         updateTurn();
   		}
   		if( keyboard.pressed('down') || keyboard.pressed('s')){
-/*        //trigo
-        controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
-        boat.position.z -= turnCos;
-        boat.position.x -= turnSin;
-        camera.position.z -= turnCos;
-        camera.position.x -= turnSin;
-
-  			boat.position.x += 1 * delta;
-*/
+        //you just can't with a boat, fool!
+        keyIsPressed = true;
   		}else if( keyboard.pressed('up') || keyboard.pressed('z')){
-        //trigo
-
+        keyIsPressed = true;
+        if(boatSpeed <= 1.5){
+          boatSpeed += 0.1;
+        }
         controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
-        boat.position.z -= turnCos;
-        boat.position.x -= turnSin;
-        camera.position.z -= turnCos;
-        camera.position.x -= turnSin;
-
-        /*
-        var forward = new THREE.Vector3(0,0,-1);
-        boat.position.add(forward);
-        */
+        //keeping the position as a vector
+        var previousBoatPosition = boat.position;
+        //update where the boat goes
+        boat.position.z -= turnCos*boatSpeed;
+        boat.position.x -= turnSin*boatSpeed;
+        camera.position.z -= turnCos*boatSpeed;
+        camera.position.x -= turnSin*boatSpeed;
+  		}else if (!keyIsPressed && boatSpeed != 0) {
+        //the boat doesn't stop because it has speed
+        //so we slow it when you don't press up
+        if(boatSpeed >= 0.08){
+          boatSpeed -= 0.08;
+        }
+        //keeping the position as a vector
+        var previousBoatPosition = boat.position;
+        boat.position.z -= turnCos*boatSpeed;
+        boat.position.x -= turnSin*boatSpeed;
+        camera.position.z -= turnCos*boatSpeed;
+        camera.position.x -= turnSin*boatSpeed;
   		}
   	})
-/*
-  	// only on keydown
-  	keyboard.domElement.addEventListener('keydown', function(event){
-  		if( keyboard.eventMatches(event, 'z') )	boat.scale.y	/= 2
-  		if( keyboard.eventMatches(event, 's') )	boat.scale.y	*= 2
-  	})
-  	// only on keyup
-  	keyboard.domElement.addEventListener('keyup', function(event){
-  		if( keyboard.eventMatches(event, 'q') )	boat.scale.x	*= 2
-  		if( keyboard.eventMatches(event, 'd') )	boat.scale.x	/= 2
-  	})
-*/
-
             //////////////////////// Cube taille d'une île
             var island_geo = new THREE.BoxGeometry(5, 1, 5);
             var island_mat = new THREE.MeshLambertMaterial({
@@ -221,8 +215,6 @@
         onRenderFcts.forEach(function(onRenderFct) {
             onRenderFct(deltaMsec / 1000, nowMsec / 1000)
         })
-
-        //controls.update();
         stats.end();
     })
     </script>
