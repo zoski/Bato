@@ -72,12 +72,12 @@
 
 					if(posX%1.25!=0) {
 						// Calcule pour x
-						px = Math.floor(posX/1.25)*1.25;
+						px = Math.round(posX/1.25)*1.25;
 						console.log(px);
 					}
 					if(posZ%1.25!=0) {
 						// calcule pour z
-						pz = Math.floor(posZ/1.25)*1.25;
+						pz = Math.round(posZ/1.25)*1.25;
 						console.log(pz);
 					}
 					return Math.cos( angle  - oriX*5 - oriY*10 + px*5 - pz*10 )*2;
