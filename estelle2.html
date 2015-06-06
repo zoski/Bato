@@ -130,6 +130,7 @@
     function updateTurn(){
         turnCos = Math.cos(THREE.Math.degToRad(turning.x*THREE.Math.radToDeg(boat.rotation.y)));
         turnSin = Math.sin(THREE.Math.degToRad(turning.y*THREE.Math.radToDeg(boat.rotation.y)));
+
     }
 
     //library for Keyboard event listener
@@ -141,15 +142,14 @@
     onRenderFcts.push(function(delta, now){
       var keyIsPressed = false;
   		if( keyboard.pressed('left') || keyboard.pressed('q')){
-        console.log(boat.rotation.y);
         keyIsPressed = true;
-  			boat.rotation.y += 1 * delta;
-        controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+  			boat.rotation.y += 1 * delta;/*
+        camera.position.z -= 5*Math.sin(boat.rotation.y);
+        camera.position.x -= 5*Math.cos(boat.rotation.y);*/
         updateTurn();
   		}else if( keyboard.pressed('right') || keyboard.pressed('d')){
         keyIsPressed = true;
   			boat.rotation.y -= 1 * delta;
-        controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
         updateTurn();
   		}
   		if( keyboard.pressed('down') || keyboard.pressed('s')){
@@ -171,8 +171,11 @@
   		}else if (!keyIsPressed && boatSpeed != 0) {
         //the boat doesn't stop because it has speed
         //so we slow it when you don't press up
-        if(boatSpeed >= 0.08){
+        if(boatSpeed > 0){
           boatSpeed -= 0.08;
+          if(boatSpeed < 0){
+            boatSpeed = 0;
+          }
         }
         //keeping the position as a vector
         var previousBoatPosition = boat.position;
@@ -180,6 +183,7 @@
         boat.position.x -= turnSin*boatSpeed;
         camera.position.z -= turnCos*boatSpeed;
         camera.position.x -= turnSin*boatSpeed;
+        controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
   		}
   	})
             //////////////////////// Cube taille d'une île

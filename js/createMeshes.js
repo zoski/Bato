@@ -31,5 +31,5 @@ var boat_mast = new THREE.Mesh( boat_mast_geometry, boat_material );
 boat_mast.position.y = 1;
 boat.add( boat_mast );
 
-boat.translateZ( 10 );
-boat.translateX( 10 );
+// boat.translateZ( 10 );
+// boat.translateX( 10 );
