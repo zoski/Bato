@@ -42,19 +42,19 @@ function init() {
     ///////////////////////////////////////////////////////////////
     //      Objects
 
-    // scene.add( new THREE.AxisHelper() );
+    scene.add( new THREE.AxisHelper() );
 
     ////////////////////////      Sea
-    // var sea_material = new THREE.MeshNormalMaterial({
-    //   side: THREE.DoubleSide,
-    //   wireframe: true
-    // });
-    //
-    // sea_geometry = new THREE.PlaneGeometry(worldSize, worldSize, 4, 4);
-    //
-    // sea = new THREE.Mesh(sea_geometry, sea_material);
-    // sea.rotateX(Math.PI / 2);
-    // scene.add(sea);
+    var sea_material = new THREE.MeshNormalMaterial({
+      side: THREE.DoubleSide,
+      wireframe: true
+    });
+
+    sea_geometry = new THREE.PlaneGeometry(worldSize, worldSize, 4, 4);
+
+    sea = new THREE.Mesh(sea_geometry, sea_material);
+    sea.rotateX(Math.PI / 2);
+    scene.add(sea);
 
     ////////////////////////      Smaller sea
     small_sea_geometry = new THREE.PlaneGeometry( 1000, 1000, 100, 100);
@@ -69,7 +69,8 @@ function init() {
     scene.add( small_sea );
 
     ///////////////////////////////////////////////////////////////
-    //      animation
+    //     animation
+    ///////////////////////////////////////////////////////////////
     var animation	= new THREEx.VertexAnimation(
         small_sea_geometry, function(origin, position, delta, now ) {
             var speed	= 0.1 ;
@@ -83,9 +84,9 @@ function init() {
         })
 
 
-        ///////////////////////////////////////////////////////////////
-        //                      Boat
-        ///////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////
+        //                    Boat
+        /////////////////////////////////////////////////////////////
         boat = new THREE.Group();
         scene.add(boat);
         var boat_material = new THREE.MeshNormalMaterial({
