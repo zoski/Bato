@@ -45,8 +45,8 @@ onRenderFcts.push(function(delta, now){
     keyIsPressed = true;
   }else if( keyboard.pressed('up') || keyboard.pressed('z')){
     keyIsPressed = true;
-    if(boatSpeed <= 0.5){
-      boatSpeed += 0.05;
+    if(boatSpeed <= 0.4){
+      boatSpeed += 0.02;
     }
     //controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
     //keeping the position as a vector
@@ -61,7 +61,7 @@ onRenderFcts.push(function(delta, now){
     //the boat doesn't stop because it has speed
     //so we slow it when you don't press up
     if(boatSpeed > 0){
-      boatSpeed -= 0.05;
+      boatSpeed -= 0.02;
       if(boatSpeed < 0){
         boatSpeed = 0;
       }
