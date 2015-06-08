@@ -33,3 +33,4 @@ boat.add( boat_mast );
 
 // boat.translateZ( 10 );
 // boat.translateX( 10 );
+boat.add(camera);
