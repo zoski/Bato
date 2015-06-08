@@ -15,34 +15,31 @@ function boatPosition(now, posX, posZ) {
         // Boat position (x, z)
         var px = posX, pz = posZ ;
         // Coordonée dans le plan de la mer
-        var x1, x2, x3;
-        var y1, y2, y3;
-        var z1, z2, z3;
+        var x1, x2, x3, x4;
+        var y1, y2, y3, y4;
+        var z1, z2, z3, z4;
 
-        x1 = Math.round(posX/1.25)*1.25;
-        x2 = x1 + 1.25;
-        x3 = x1;
-
-        z1 = Math.round(posZ/1.25)*1.25;
-        z2 = z1;
-        z3 = z1 + 1.25;
+        if( posX%1.25!=0 ) {
+            // Calcule pour x
+            // px = Math.round(posX/1.25)*1.25;
+            x1 = Math.round(posX/1.25)*1.25;
+            x2 = x1 + 1.25;
+            x3 = x1;
+            x4 = x2;
+        }
+        if( posZ%1.25!=0 ) {
+            // calcule pour z
+            // pz = Math.round(posZ/1.25)*1.25;
+            z1 = Math.round(posZ/1.25)*1.25;
+            z2 = z1;
+            z3 = z1 + 1.25;
+            z4 = z3;
+        }
 
         y1 = Math.cos( angle  - oriX*5 - oriY*10 + x1*5 - z1*10 )*2
         y2 = Math.cos( angle  - oriX*5 - oriY*10 + x2*5 - z2*10 )*2
         y3 = Math.cos( angle  - oriX*5 - oriY*10 + x3*5 - z3*10 )*2
-        boat.position.y = ( y1 + y2 + y3 )/3;
-
-
-
-        // if(posX%1.25!=0) {
-        //     // Calcule pour x
-        //     px = Math.round(posX/1.25)*1.25;
-        // }
-        // if(posZ%1.25!=0) {
-        //     // calcule pour z
-        //     pz = Math.round(posZ/1.25)*1.25;
-        // }
-
-        // boat.position.y =  Math.cos( angle  - oriX*5 - oriY*10 + px*5 - pz*10 )*2;
+        y4 = Math.cos( angle  - oriX*5 - oriY*10 + x4*5 - z4*10 )*2
+        boat.position.y = ( y1 + y2 + y3 + y4 )/4;
     }
 }

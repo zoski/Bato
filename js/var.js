@@ -20,3 +20,7 @@ var oriX ; var oriY ;	// copie de la position d'origin.
 
 // main.js
 var leWorld ;
+
+//collision
+var colliderSystem ;
+var colliders ;

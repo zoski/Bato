@@ -12,6 +12,12 @@ controls.maxDistance = 10;
 //set the min/max angle to unable being under the sea
 controls.minPolarAngle = THREE.Math.degToRad(0);
 controls.maxPolarAngle = THREE.Math.degToRad(90);
-renderer = new THREE.WebGLRenderer(  {antialias: false} );
+renderer = new THREE.WebGLRenderer(  {antialias: true} );
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+colliderSystem	= new THREEx.ColliderSystem();
+colliders = []
+onRenderFcts.push(function(){
+		colliderSystem.computeAndNotify(colliders)
+	})

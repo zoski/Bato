@@ -31,6 +31,18 @@ var boat_mast = new THREE.Mesh( boat_mast_geometry, boat_material );
 boat_mast.position.y = 1;
 boat.add( boat_mast );
 
-// boat.translateZ( 10 );
-// boat.translateX( 10 );
-boat.add(camera);
+/////////// Collision
+var boatBox = new THREE.Box3();
+boatBox.setFromObject( boat );
+collider = new THREEx.ColliderBox3( boat, boat_base );
+// onRenderFcts.push(function(delta){
+// 		collider.update()
+// 	})      La geometry du bateau n'est jamais modifié
+collider.addEventListener('contactEnter',function(otherCollider){
+        console.log('contactEnter' )
+        });
+collider.addEventListener('contactExit',function(otherCollider){
+        console.log('contactExit' )
+        });
+
+boat.add( camera );

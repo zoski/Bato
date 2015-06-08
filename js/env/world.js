@@ -60,6 +60,23 @@ function WorldGenerator( leworld, maxIsland, worldSize, threeScene, complex, fly
         mat).getMesh();
 
         leworld.push(tmp);
+        /////////////////////
+        //      Collision
+        /////////////////////
+        var collider = THREEx.Collider.createFromObject3d( tmp );
+        colliders.push( collider );
+        // colliderSystem.add(collider)
+        // onRenderFcts.push(function(delta) {
+        //     collider.update()
+        // });
+
+        collider.addEventListener('contactEnter',function(otherCollider){
+        		console.log('contactEnter' )
+                });
+        collider.addEventListener('contactExit',function(otherCollider){
+        		console.log('contactExit' )
+                });
+
 
         if(flying) {
             //x, y, z, maxX, maxY, maxZ, radius, material
