@@ -30,23 +30,24 @@ var boat_mast_geometry = new THREE.BoxGeometry(0.1, 2, 0.1);
 var boat_mast = new THREE.Mesh( boat_mast_geometry, boat_material );
 boat_mast.position.y = 1;
 boat.add( boat_mast );
-
-// /////////////////////
-// //      Collision
-// /////////////////////
-// var boatBox = new THREE.Box3();
-// boatBox.setFromObject( boat );
-// var collider = new THREEx.ColliderBox3( boat, boat_base );
-// onRenderFcts.push(function(delta) {
-// 		collider.update()
-// 	});
-//     collider.addEventListener('contactEnter', function(otherCollider){
-// 		console.log('contactEnter', collider.object3d.name, 'with', otherCollider.object3d.name)
-// 		helper.material.color.set('red')
-// 	})
-// 	collider.addEventListener('contactExit', function(otherCollider){
-// 		console.log('contactExit', collider.object3d.name, 'with', otherCollider.object3d.name)
-// 		helper.material.color.set('green')
-// 	})
-
 boat.add( camera );
+/////////////////////
+//      Collision
+//
+//  3 type d'événement à écouter :
+//  contactEnter, contactStay et contactExit
+/////////////////////
+var boatBox = new THREE.Box3();
+boatBox.setFromObject( boat );
+var collider = new THREEx.ColliderBox3( boat, boatBox );
+colliders.push( collider );
+onRenderFcts.push(function(delta) {
+		collider.update();
+	});
+    collider.addEventListener('contactEnter', function(otherCollider) {
+        // écris ton code ici Estelle
+        console.log('faire reculer le bateau');
+    });
+	collider.addEventListener('contactExit', function(otherCollider) {
+		console.log('arreter de faire reculer le bateau');
+	});

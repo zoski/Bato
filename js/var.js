@@ -22,5 +22,5 @@ var oriX ; var oriY ;	// copie de la position d'origin.
 var leWorld ;
 
 //collision
-// var colliderSystem ;
-// var colliders ;
+var colliderSystem ;
+var colliders ;

@@ -60,24 +60,24 @@ function WorldGenerator( leworld, maxIsland, worldSize, threeScene, complex, fly
         mat).getMesh();
 
         leworld.push(tmp);
-        // /////////////////////
-        // //      Collision
-        // /////////////////////
-        // var tmpBox = new THREE.Box3();
-        // tmpBox.setFromObject( tmp );
-        // var collider = new THREEx.ColliderBox3( tmpBox, tmp );
-        // colliders.push( collider );
-        // onRenderFcts.push(function(delta) {
-        //     collider.update()
-        // });
-        //
-        // collider.addEventListener('contactEnter', function(otherCollider){
-    	// 	console.log('contactEnter', collider.object3d.name, 'with', otherCollider.object3d.name)
-    	// 	helper.material.color.set('red')
+        /////////////////////
+        //      Collision
+        /////////////////////
+        var tmpBox = new THREE.Box3();
+        tmpBox.setFromObject( tmp );
+        var collider = new THREEx.ColliderBox3( tmp, tmpBox );
+        colliders.push( collider );
+        onRenderFcts.push( function(delta) {
+            collider.update();
+        });
+
+        // collider.addEventListener('contactEnter', function(otherCollider) {
+    	// 	console.log('contactEnter', collider.object3d.name, 'with', otherCollider.object3d.name);
+    	// 	// helper.material.color.set('red');
     	// })
-    	// collider.addEventListener('contactExit', function(otherCollider){
-    	// 	console.log('contactExit', collider.object3d.name, 'with', otherCollider.object3d.name)
-    	// 	helper.material.color.set('green')
+    	// collider.addEventListener('contactExit', function(otherCollider) {
+    	// 	console.log('contactExit', collider.object3d.name, 'with', otherCollider.object3d.name);
+    	// 	// helper.material.color.set('green');
     	// })
 
         if(flying) {
