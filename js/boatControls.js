@@ -29,33 +29,30 @@ onRenderFcts.push(function(delta, now){
   var keyIsPressed = false;
   if( keyboard.pressed('left') || keyboard.pressed('q')){
     keyIsPressed = true;
-    boat.rotation.y += 1 * delta;/*
-    camera.position.z -= 5*Math.sin(boat.rotation.y);
-    camera.position.x -= 5*Math.cos(boat.rotation.y);*/
-    //controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+    boat.rotation.y += 1 * delta;
     updateTurn();
   }else if( keyboard.pressed('right') || keyboard.pressed('d')){
     keyIsPressed = true;
     boat.rotation.y -= 1 * delta;
-    //controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
     updateTurn();
   }
   if( keyboard.pressed('down') || keyboard.pressed('s')){
     //you just can't with a boat, fool!
     keyIsPressed = true;
+
   }else if( keyboard.pressed('up') || keyboard.pressed('z')){
     keyIsPressed = true;
     if(boatSpeed <= 0.4){
       boatSpeed += 0.02;
     }
-    //controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
+
     //keeping the position as a vector
     var previousBoatPosition = boat.position;
     //update where the boat goes
     boat.position.z -= turnCos*boatSpeed;
     boat.position.x -= turnSin*boatSpeed;
-    //camera.position.z -= turnCos*boatSpeed;
-    //camera.position.x -= turnSin*boatSpeed;
+
+    //if(boat.position.y > previousBoatPosition.y)
 
 	}else if (!keyIsPressed && boatSpeed != 0) {
     //the boat doesn't stop because it has speed
@@ -70,8 +67,5 @@ onRenderFcts.push(function(delta, now){
     var previousBoatPosition = boat.position;
     boat.position.z -= turnCos*boatSpeed;
     boat.position.x -= turnSin*boatSpeed;
-    //camera.position.z -= turnCos*boatSpeed;
-    //camera.position.x -= turnSin*boatSpeed;
-    //controls.target = new THREE.Vector3(boat.position.x,1,boat.position.z);
 	}
 })
