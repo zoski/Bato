@@ -1,13 +1,14 @@
 ///////////////////////////////////////////////////////////////
 //                  Boat Controls
 ///////////////////////////////////////////////////////////////
-
-
+/*
+var mobileBoat = new THREE.DeviceOrientationControls( boat ); //
+mobileBoat.update();*/
 
 //variables for the moves of the boat
 var velocity = new THREE.Vector3(1,1,1);  //useless?
 var boatSpeed = 0;
-var turning = new THREE.Vector2(1,1);
+var turning = new THREE.Vector2(1,1); //will be changing with the speed
 
 //Variable projection Helper:
 var turnCos = Math.cos(THREE.Math.degToRad(turning.x*THREE.Math.radToDeg(boat.rotation.y)));
@@ -47,7 +48,7 @@ onRenderFcts.push(function(delta, now){
     }
 
     //keeping the position as a vector
-    var previousBoatPosition = boat.position;
+    //var previousBoatPosition = boat.position;
     //update where the boat goes
     boat.position.z -= turnCos*boatSpeed;
     boat.position.x -= turnSin*boatSpeed;
