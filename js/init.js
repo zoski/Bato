@@ -22,3 +22,5 @@ colliders = [];
 onRenderFcts.push( function() {
 		colliderSystem.computeAndNotify(colliders);
 	});
+
+window.addEventListener( 'resize', onWindowResize, false );
