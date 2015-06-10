@@ -16,6 +16,7 @@ scene.add( sea );
 //                  Boat
 ///////////////////////////////////////////////////////////////
 boat = new THREE.Group();
+var boatSpeed = 0;
 scene.add( boat );
 var boat_material = new THREE.MeshNormalMaterial({
     //color: 0x00ff00
@@ -30,7 +31,25 @@ var boat_mast_geometry = new THREE.BoxGeometry(0.1, 2, 0.1);
 var boat_mast = new THREE.Mesh( boat_mast_geometry, boat_material );
 boat_mast.position.y = 1;
 boat.add( boat_mast );
-
-// boat.translateZ( 10 );
-// boat.translateX( 10 );
-boat.add(camera);
+boat.add( camera );
+/////////////////////
+//      Collision
+//
+//  3 type d'événement à écouter :
+//  contactEnter, contactStay et contactExit
+/////////////////////
+var boatBox = new THREE.Box3();
+boatBox.setFromObject( boat );
+var collider = new THREEx.ColliderBox3( boat, boatBox );
+colliders.push( collider );
+onRenderFcts.push(function(delta) {
+		collider.update();
+	});
+    collider.addEventListener('contactEnter', function(otherCollider) {
+        boatSpeed = -boatSpeed;
+    });
+	collider.addEventListener('contactExit', function(otherCollider) {
+    while(boatSpeed < 0){
+      boatSpeed += 0.02;
+    }
+	});
