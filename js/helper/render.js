@@ -9,7 +9,7 @@ function render() {
     })
 
     requestAnimationFrame(function render(nowMsec) {
-        // stats.begin();
+        stats.begin();
         // keep looping
         requestAnimationFrame( render );
         // measure time
@@ -22,7 +22,7 @@ function render() {
         })
         boatPosition( nowMsec / 1000, boat.position.x, boat.position.z );
         controls.update();
-        // stats.end();
+        stats.end();
     })
 
 }
