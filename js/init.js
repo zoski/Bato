@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////
-//      Initializer
+//    					  Initializer
 ///////////////////////////////////////////////////////////////
 scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, minView, maxView );
@@ -16,7 +16,7 @@ renderer = new THREE.WebGLRenderer(  {antialias: true} );
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-////////////    Collision /////////////
+////////////    Collision 	/////////////
 colliderSystem	= new THREEx.ColliderSystem();
 colliders = [];
 onRenderFcts.push( function() {
