@@ -63,7 +63,6 @@ onRenderFcts.push(function(delta, now){
       if(boatSpeed <= 0){
         //boatSpeed += 0.02;
         boatSpeed = 0;
-        console.log("STOP");
       }
     }
     //keeping the position as a vector
