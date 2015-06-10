@@ -19,18 +19,27 @@ boat = new THREE.Group();
 var boatSpeed = 0;
 scene.add( boat );
 var boat_material = new THREE.MeshNormalMaterial({
+    side: THREE.DoubleSide
     //color: 0x00ff00
     //shading: THREE.SmoothShading,
     //color: 0x0092ff //brown
 });
-var boat_base_geometry = new THREE.BoxGeometry(1, 0.5, 2);
+var boat_base_geometry = new THREE.BoxGeometry( 1, 0.5, 2);
 var boat_base = new THREE.Mesh( boat_base_geometry, boat_material );
 boat_base.position.y = 0.25;
 boat.add( boat_base );
-var boat_mast_geometry = new THREE.BoxGeometry(0.1, 2, 0.1);
+var boat_mast_geometry = new THREE.BoxGeometry( 0.1, 2, 0.1);
 var boat_mast = new THREE.Mesh( boat_mast_geometry, boat_material );
 boat_mast.position.y = 1;
 boat.add( boat_mast );
+
+var boat_sail_geometry = new THREE.BoxGeometry( 1.6, 1.4, 0.05 );
+var boat_sail = new THREE.Mesh( boat_sail_geometry, boat_material );
+boat_sail.position.y = 1.3;
+boat_sail.position.z = -0.1;
+//boat_sail.rotateY( Math.PI/2 );
+boat.add( boat_sail );
+
 boat.add( camera );
 /////////////////////
 //      Collision
