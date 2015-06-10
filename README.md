@@ -1,19 +1,30 @@
-# bateau
+# Batô
 Projet de 2eme année Informatique et Réseau à l'[ENSISA](http://ensisa.fr).
 
-## Organisation du projet
- * **lib**	: rassemble les bibliothéques externes
- * **js**	: game core (notre code)
- * **models**
- * **sounds**
- * **images**
+## Utilisation
+### Installation
+    git clone https://github.com/zoski/Bato.git
+Puis lancer **index.html**.
+### Jeu en ligne
+En ouvrant [cette page](http://zoski.github.io/Bato.
 
-## Bibliothèques et ressources externes utilisé
- * [Threejs](http://threejs.org/)
- * Quelques _models_ de [Kaiopua](http://collinhover.github.io/kaiopua/)
+## Organisation du projet
+ * **lib**	: les bibliothéques externes
+ * **js**	: game core (notre code)
+    * **env**   : contient les différents objets de l'environnement
+    * **helper** : contient les différents script d'aide
+ * **models** : des modèles crées non utilisé
+ * **images** : favicon et image pour les bibliothéques externes
+ * **poster** : les sources et le **.pdf** du poster
+ * **Schematics** : les sources des différents schémas
+
+## Bibliothèques
+ * [Three.js](http://threejs.org/)
  * [THREEx Game Extension for Three.js](http://www.threejsgames.com/extensions)
-* daynight
-* VertexAnimation
+    * VertexAnimation
+    * colliderSystem
+    * keyboardstate
+    * <del>daynight</del> - Retiré du projet n'allait pas avec le style **non texturé**
 
 ## Documentation/Tuto
 

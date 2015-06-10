@@ -5,8 +5,7 @@
 var mobileBoat = new THREE.DeviceOrientationControls( boat ); //
 mobileBoat.update();*/
 
-//variables for the moves of the boat
-var velocity = new THREE.Vector3(1,1,1);  //useless?
+//variable for the moves of the boat is in the createMeshes
 //var boatSpeed = 0;  //in createMeshes for colliders
 var turning = new THREE.Vector2(1,1); //will be changing with the speed
 
@@ -25,7 +24,7 @@ var keyboard	= new THREEx.KeyboardState(renderer.domElement);
 renderer.domElement.setAttribute("tabIndex", "0");
 renderer.domElement.focus();
 
-//first rotation is update then position
+//first rotation is update and then the boat go forward
 onRenderFcts.push(function(delta, now){
   var keyIsPressed = false;
   if( keyboard.pressed('left') || keyboard.pressed('q')){
@@ -38,7 +37,6 @@ onRenderFcts.push(function(delta, now){
     updateTurn();
   }
   if( keyboard.pressed('down') || keyboard.pressed('s')){
-    //you just can't with a boat, fool!
     keyIsPressed = true;
 
   }else if( keyboard.pressed('up') || keyboard.pressed('z')){
@@ -48,12 +46,13 @@ onRenderFcts.push(function(delta, now){
     }
 
     //keeping the position as a vector
-    //var previousBoatPosition = boat.position;
+    //var previousBoatPosition = boat.position; //to calculate the height
+
     //update where the boat goes
     boat.position.z -= turnCos*boatSpeed;
     boat.position.x -= turnSin*boatSpeed;
 
-    //if(boat.position.y > previousBoatPosition.y)
+    //if(boat.position.y > previousBoatPosition.y)  //waves change the x/z boat rotation
 
 	}else if (!keyIsPressed && boatSpeed != 0) {
     //the boat doesn't stop because it has speed
@@ -66,7 +65,7 @@ onRenderFcts.push(function(delta, now){
       }
     }
     //keeping the position as a vector
-    var previousBoatPosition = boat.position;
+    // var previousBoatPosition = boat.position;
     boat.position.z -= turnCos*boatSpeed;
     boat.position.x -= turnSin*boatSpeed;
 	}
