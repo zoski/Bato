@@ -7,7 +7,7 @@ mobileBoat.update();*/
 
 //variables for the moves of the boat
 var velocity = new THREE.Vector3(1,1,1);  //useless?
-var boatSpeed = 0;
+//var boatSpeed = 0;  //in createMeshes for colliders
 var turning = new THREE.Vector2(1,1); //will be changing with the speed
 
 //Variable projection Helper:
@@ -60,8 +60,10 @@ onRenderFcts.push(function(delta, now){
     //so we slow it when you don't press up
     if(boatSpeed > 0){
       boatSpeed -= 0.02;
-      if(boatSpeed < 0){
+      if(boatSpeed <= 0){
+        //boatSpeed += 0.02;
         boatSpeed = 0;
+        console.log("STOP");
       }
     }
     //keeping the position as a vector

@@ -16,6 +16,7 @@ scene.add( sea );
 //                  Boat
 ///////////////////////////////////////////////////////////////
 boat = new THREE.Group();
+var boatSpeed = 0;
 scene.add( boat );
 var boat_material = new THREE.MeshNormalMaterial({
     //color: 0x00ff00
@@ -45,9 +46,10 @@ onRenderFcts.push(function(delta) {
 		collider.update();
 	});
     collider.addEventListener('contactEnter', function(otherCollider) {
-        // écris ton code ici Estelle
-        console.log('faire reculer le bateau');
+        boatSpeed = -boatSpeed;
     });
 	collider.addEventListener('contactExit', function(otherCollider) {
-		console.log('arreter de faire reculer le bateau');
+    while(boatSpeed < 0){
+      boatSpeed += 0.02;
+    }
 	});
